@@ -1,6 +1,6 @@
-# My Axum API Documentation
+# Api Backend For Full Send Waxing
 
-Welcome to the My Axum API documentation. This document outlines the various endpoints available in our API, along with their functionalities and usage examples.
+Full send waxing backend api build using axum rust web framework and sea orm
 
 ## API Endpoints
 
