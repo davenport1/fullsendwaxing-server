@@ -6,6 +6,17 @@ CREATE TABLE IF NOT EXISTS users (
   token       TEXT DEFAULT NULL
 );
 
+CREATE TABLE IF NOT EXISTS appointments (
+  id          SERIAL PRIMARY KEY, 
+  user_id    VARCHAR(64) NOT NULL,
+  date        TIMESTAMPTZ NOT NULL,
+  start_time  TIMESTAMPTZ NOT NULL,
+  end_time    TIMESTAMPTZ NOT NULL,
+  category    INTEGER,
+  notes       TEXT,
+  CONSTRAINT fk_users FOREIGN KEY (user_id) REFERENCES users(id)
+);
+
 CREATE TABLE IF NOT EXISTS tasks (
   id            SERIAL PRIMARY KEY,
   priority      VARCHAR(4) DEFAULT NULL,
