@@ -3,7 +3,7 @@ use dotenvy_macro::dotenv;
 
 use fullsendwaxing_server;
 
-/// <summary> 
+/// <summary>
 ///  Main entry point into our app
 /// </summary>
 #[tokio::main]

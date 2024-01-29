@@ -1,16 +1,29 @@
-use axum::Extension;
-use sea_orm::DatabaseConnection;
+use axum::{Extension, Json};
+use chrono::{FixedOffset, DateTime};
+use sea_orm::ActiveValue::Set;
+use sea_orm::{ActiveModelTrait, DatabaseConnection};
+use serde::Deserialize;
 
 use crate::database::appointments;
 
-pub async fn create_appointment(Extension(database): Extension<DatabaseConnection>) {
+#[derive(Deserialize)]
+pub struct RequestBody {
+    user_id: i32,
+    date: DateTime<FixedOffset>,
+    category: Option<i32>,
+    notes: Option<String>,
+}
+
+pub async fn create_appointment(Extension(database): Extension<DatabaseConnection>, Json(appointment): Json<RequestBody>) {
     let new_appointment = appointments::ActiveModel {
-        id: Default::default(),
-        user_id: Default::default(),
-        date: Default::default(),
-        start_time: Default::default(),
-        end_time: Default::default(),
-        category: Default::default(),
-        notes: Default::default(),
+        // id is set by database
+        user_id: Set(appointment.user_id),
+        date: Set(appointment.date),
+        category: Set(appointment.category),
+        notes: Set(appointment.notes),
+        ..Default::default()
     };
+
+    let result = new_appointment.save(&database).await.unwrap();
+    dbg!(result);
 }
