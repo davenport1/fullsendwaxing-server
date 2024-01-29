@@ -8,10 +8,8 @@ CREATE TABLE IF NOT EXISTS users (
 
 CREATE TABLE IF NOT EXISTS appointments (
   id          SERIAL PRIMARY KEY, 
-  user_id    VARCHAR(64) NOT NULL,
+  user_id     INTEGER NOT NULL,
   date        TIMESTAMPTZ NOT NULL,
-  start_time  TIMESTAMPTZ NOT NULL,
-  end_time    TIMESTAMPTZ NOT NULL,
   category    INTEGER,
   notes       TEXT,
   CONSTRAINT fk_users FOREIGN KEY (user_id) REFERENCES users(id)
@@ -40,3 +38,11 @@ INSERT INTO tasks (title, deleted_at, user_id) VALUES (
 INSERT INTO tasks (priority, title, description, is_default) VALUES 
   ('A', 'I am a task, you can complete me by checking the box', 'This is my description', true),
   ('B', 'See my details for by clicking me', 'My description can be changed', true);
+
+INSERT INTO appointments (user_id, date, category, notes) 
+VALUES (
+    1, 
+    TIMESTAMP WITH TIME ZONE '2024-01-29 12:34:56.789123+00:00', 
+    1, 
+    'Full board tune'
+);

@@ -25,3 +25,12 @@ Full send waxing backend api build using axum rust web framework and sea orm
 
 ## Examples and Usage
 ToDo
+
+
+# Docker commands
+
+- **Starting docker database**: docker-compose up
+- **List containers**: docker volume ls
+- **Removing container**: docker-compose down, docker volume rm fullsendwaxing-server_db-data
+- **Accessing terminal in container**: docker-compose exec fullsendwaxing-server /bin/bash
+- **Accessing postgres database in the container**: psql -U postgres -d [postgres | fullsendwaxing-server]
