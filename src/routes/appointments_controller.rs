@@ -1,4 +1,4 @@
-use axum::{Extension, Json};
+use axum::{Extension, Json, debug_handler};
 use axum::extract::Path;
 use axum::http::StatusCode;
 use axum_extra::headers::Authorization;
@@ -28,6 +28,7 @@ pub struct ResponseBody {
     notes: Option<String>,
 }
 
+#[debug_handler]
 pub async fn create_appointment(
     Extension(database): Extension<DatabaseConnection>,
     authorization: TypedHeader<Authorization<Bearer>>,
@@ -67,6 +68,7 @@ pub async fn create_appointment(
     }))
 }
 
+#[debug_handler]
 pub async fn get_appointment(
     Extension(connection): Extension<DatabaseConnection>,
     Path(appointment_id): Path<i32>) -> Result<Json<ResponseBody>, StatusCode>{
@@ -91,10 +93,11 @@ pub async fn get_appointment(
     }
 }
 
+#[debug_handler]
 pub async fn get_all_appointments(
     Extension(connection): Extension<DatabaseConnection>,
 ) -> Result<Json<Vec<ResponseBody>>, StatusCode> {
-    let appointments = appointments::Entity::find()
+    let _appointments = appointments::Entity::find()
         .all(&connection)
         .await
         .map_err(|_| StatusCode::INTERNAL_SERVER_ERROR)?;

@@ -1,12 +1,8 @@
-use axum::{
-    Extension,
-    Json,
-    http::StatusCode,
-};
+use axum::{Extension, Json, http::StatusCode, debug_handler};
 use axum_extra::headers::Authorization;
 use axum_extra::headers::authorization::Bearer;
 use axum_extra::TypedHeader;
-use sea_orm::{ActiveValue::Set, DatabaseConnection, EntityTrait, IntoActiveModel, QueryFilter, ActiveModelTrait, ColumnTrait, sqlx_error_to_conn_err};
+use sea_orm::{ActiveValue::Set, DatabaseConnection, EntityTrait, IntoActiveModel, QueryFilter, ActiveModelTrait, ColumnTrait};
 use serde::{Deserialize, Serialize};
 
 use crate::database::{
@@ -27,6 +23,7 @@ pub struct ResponseUser {
     token: String,
 }
 
+#[debug_handler]
 pub async fn create_user(
     Extension(connection): Extension<DatabaseConnection>,
     Json(request_user): Json<RequestUser>
@@ -52,6 +49,7 @@ pub async fn create_user(
 /// <summary>
 ///
 /// </summary>
+#[debug_handler]
 pub async fn login(
     Extension(connection): Extension<DatabaseConnection>,
     Json(request_user): Json<RequestUser>
@@ -86,6 +84,7 @@ pub async fn login(
     }
 }
 
+#[debug_handler]
 pub async fn logout(
     Extension(connection): Extension<DatabaseConnection>,
     authorization: TypedHeader<Authorization<Bearer>>
@@ -105,7 +104,7 @@ pub async fn logout(
 
     user.token = Set(None);
 
-    user.save(&connection)
+    let _ = user.save(&connection)
         .await
         .map_err(|_| StatusCode::INTERNAL_SERVER_ERROR);
 
