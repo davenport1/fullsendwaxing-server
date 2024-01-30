@@ -1,6 +1,7 @@
 mod database;
 mod routes;
 mod utilities;
+mod middleware;
 
 use sea_orm::Database;
 

@@ -1,13 +1,12 @@
 mod appointments_controller;
 mod users_controller;
 
-use axum::{
-    routing::{get, post},
-    Extension, Router,
-};
+use axum::{routing::{get, post}, Extension, Router, middleware};
 use hyper::Method;
 use sea_orm::DatabaseConnection;
 use tower_http::cors::{Any, CorsLayer};
+use crate::middleware::authorize;
+
 
 pub fn create_routes(connection: DatabaseConnection) -> Router {
     // set up cors middleware layer
@@ -19,8 +18,10 @@ pub fn create_routes(connection: DatabaseConnection) -> Router {
 
     // build out routes
     Router::new()
+        .route_layer(middleware::from_fn(authorize::authorize))
         .route("/users", post(users_controller::create_user))
         .route("/users/login", post(users_controller::login))
+        .route("/users/logout", post(users_controller::logout))
         .route("/appointments", post(appointments_controller::create_appointment))
         .route("/appointments/:appointment_id", get(appointments_controller::get_appointment))
         .route("/appointments", get(appointments_controller::get_all_appointments))

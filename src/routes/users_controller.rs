@@ -3,15 +3,10 @@ use axum::{
     Json,
     http::StatusCode,
 };
-use sea_orm::{
-    ActiveValue::Set,
-    DatabaseConnection,
-    EntityTrait,
-    IntoActiveModel,
-    QueryFilter,
-    ActiveModelTrait,
-    ColumnTrait,
-};
+use axum_extra::headers::Authorization;
+use axum_extra::headers::authorization::Bearer;
+use axum_extra::TypedHeader;
+use sea_orm::{ActiveValue::Set, DatabaseConnection, EntityTrait, IntoActiveModel, QueryFilter, ActiveModelTrait, ColumnTrait, sqlx_error_to_conn_err};
 use serde::{Deserialize, Serialize};
 
 use crate::database::{
@@ -89,6 +84,33 @@ pub async fn login(
         // cannot find user
         Err(StatusCode::NOT_FOUND)
     }
+}
+
+pub async fn logout(
+    Extension(connection): Extension<DatabaseConnection>,
+    authorization: TypedHeader<Authorization<Bearer>>
+) ->Result<(), StatusCode> {
+
+    let token = authorization.token();
+
+    let mut user = if let Some(user) = Users::find()
+        .filter(users::Column::Token.eq(token))
+        .one(&connection)
+        .await
+        .map_err(|_| StatusCode::INTERNAL_SERVER_ERROR)? {
+        user.into_active_model()
+    } else {
+        return Err(StatusCode::UNAUTHORIZED);
+    };
+
+    user.token = Set(None);
+
+    user.save(&connection)
+        .await
+        .map_err(|_| StatusCode::INTERNAL_SERVER_ERROR);
+
+
+    Ok(())
 }
 
 // https://github.com/tokio-rs/axum/discussions/1735
