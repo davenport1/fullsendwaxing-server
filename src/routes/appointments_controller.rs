@@ -63,3 +63,9 @@ pub async fn get_appointment(
         Err(StatusCode::NOT_FOUND)
     }
 }
+
+pub async fn get_all_appointments(
+    Extension(connection): Extension<DatabaseConnection>,
+) -> Result<Json<Vec<ResponseBody>>, StatusCode> {
+    todo!()
+}
