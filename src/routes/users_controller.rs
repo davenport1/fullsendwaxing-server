@@ -1,7 +1,4 @@
 use axum::{Extension, Json, http::StatusCode, debug_handler};
-use axum_extra::headers::Authorization;
-use axum_extra::headers::authorization::Bearer;
-use axum_extra::TypedHeader;
 use sea_orm::{ActiveValue::Set, DatabaseConnection, EntityTrait, IntoActiveModel, QueryFilter, ActiveModelTrait, ColumnTrait};
 use serde::{Deserialize, Serialize};
 
@@ -9,6 +6,7 @@ use crate::database::{
     users,
     users::Entity as Users,
 };
+use crate::database::users::Model as UsersModel;
 
 #[derive(Deserialize)]
 pub struct RequestUser {
@@ -87,21 +85,10 @@ pub async fn login(
 #[debug_handler]
 pub async fn logout(
     Extension(connection): Extension<DatabaseConnection>,
-    authorization: TypedHeader<Authorization<Bearer>>
+    Extension(user): Extension<UsersModel>,
 ) ->Result<(), StatusCode> {
-
-    let token = authorization.token();
-
-    let mut user = if let Some(user) = Users::find()
-        .filter(users::Column::Token.eq(token))
-        .one(&connection)
-        .await
-        .map_err(|_| StatusCode::INTERNAL_SERVER_ERROR)? {
-        user.into_active_model()
-    } else {
-        return Err(StatusCode::UNAUTHORIZED);
-    };
-
+    // set the token to none and update the users token in db
+    let mut user = user.into_active_model();
     user.token = Set(None);
 
     let _ = user.save(&connection)

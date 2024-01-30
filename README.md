@@ -34,3 +34,6 @@ ToDo
 - **Removing container**: docker-compose down, docker volume rm fullsendwaxing-server_db-data
 - **Accessing terminal in container**: docker-compose exec fullsendwaxing-server /bin/bash
 - **Accessing postgres database in the container**: psql -U postgres -d [postgres | fullsendwaxing-server]
+- docker-compose ps
+- docker container ls
+- docker volume ls

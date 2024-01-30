@@ -54,6 +54,7 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
+<<<<<<< Updated upstream
   <component name="PropertiesComponent">{
   &quot;keyToString&quot;: {
     &quot;ASKED_ADD_EXTERNAL_FILES&quot;: &quot;true&quot;,
@@ -70,12 +71,34 @@
     &quot;org.rust.disableDetachedFileInspection/Users/matthewdavenport/Projects/full-send-waxing/fullsendwaxing-server/src/utilities/enumerations.rs&quot;: &quot;true&quot;,
     &quot;settings.editor.selected.configurable&quot;: &quot;language.rust&quot;,
     &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+=======
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "ASKED_ADD_EXTERNAL_FILES": "true",
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "git-widget-placeholder": "master",
+    "ignore.virus.scanning.warn.message": "true",
+    "last_opened_file_path": "D:/WebApplications/FullSendWaxing/fullsendwaxing-server",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "org.rust.cargo.project.model.PROJECT_DISCOVERY": "true",
+    "org.rust.disableDetachedFileInspection/Users/matthewdavenport/Projects/full-send-waxing/fullsendwaxing-server/src/utilities/enumerations.rs": "true",
+    "settings.editor.selected.configurable": "language.rust.cargo.check",
+    "vue.rearranger.settings.migration": "true"
+>>>>>>> Stashed changes
   }
 }</component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/src/database" />
     </key>
+  </component>
+  <component name="RsExternalLinterProjectSettings">
+    <option name="runOnTheFly" value="true" />
   </component>
   <component name="RustProjectSettings">
     <option name="toolchainHomeDirectory" value="$USER_HOME$/.cargo/bin" />
@@ -90,9 +113,14 @@
       <updated>1706424962313</updated>
       <workItem from="1706424963392" duration="253000" />
       <workItem from="1706491492355" duration="2948000" />
+<<<<<<< Updated upstream
       <workItem from="1706568838260" duration="646000" />
       <workItem from="1706579513527" duration="10316000" />
       <workItem from="1706630087745" duration="865000" />
+=======
+      <workItem from="1706568838260" duration="1096000" />
+      <workItem from="1706569959696" duration="3636000" />
+>>>>>>> Stashed changes
     </task>
     <servers />
   </component>
