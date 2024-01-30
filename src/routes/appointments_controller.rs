@@ -2,8 +2,8 @@ use axum::{Extension, Json};
 use axum::extract::Path;
 use axum::http::StatusCode;
 use chrono::{FixedOffset, DateTime};
-use sea_orm::ActiveValue::Set;
-use sea_orm::{ActiveModelTrait, DatabaseConnection};
+use sea_orm::{ActiveValue::Set, entity::*};
+use sea_orm::DatabaseConnection;
 use serde::{Deserialize, Serialize};
 
 use crate::database::appointments;
