@@ -4,6 +4,7 @@ use dotenvy_macro::dotenv;
 use serde::{Deserialize, Serialize};
 use jsonwebtoken::{decode, DecodingKey, encode, EncodingKey, Header, Validation};
 use jsonwebtoken::errors::ErrorKind;
+use crate::utilities::fsw_error::FswError;
 
 #[derive(Serialize, Deserialize, Debug)]
 pub struct Claims {
@@ -28,14 +29,14 @@ pub fn create_token() -> Result<String, StatusCode> {
         .map_err(|_error| StatusCode::INTERNAL_SERVER_ERROR)
 }
 
-pub fn is_token_valid(token: &str) -> Result<bool, StatusCode> {
+pub fn is_token_valid(token: &str) -> Result<bool, FswError> {
     let secret: &'static str = dotenv!("JWT_SECRET");
     let key = DecodingKey::from_secret(secret.as_bytes());
     _ = decode::<Claims>(token, &key, &Validation::default())
         .map_err(|error| {
             match error.kind() {
-                ErrorKind::ExpiredSignature => StatusCode::UNAUTHORIZED,
-                _ => StatusCode::INTERNAL_SERVER_ERROR
+                ErrorKind::ExpiredSignature => FswError::new(StatusCode::UNAUTHORIZED, "Your session has expired! Please login again."),
+                _ => FswError::new(StatusCode::INTERNAL_SERVER_ERROR, "Something went wrong, please try again later.")
             }
         })?;
     Ok(true)
