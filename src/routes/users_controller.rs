@@ -7,6 +7,7 @@ use crate::database::{
     users::Entity as Users,
 };
 use crate::database::users::Model as UsersModel;
+use crate::utilities::claims;
 
 #[derive(Deserialize)]
 pub struct RequestUser {
@@ -26,11 +27,12 @@ pub async fn create_user(
     Extension(connection): Extension<DatabaseConnection>,
     Json(request_user): Json<RequestUser>
 ) -> Result<Json<ResponseUser>, StatusCode> {
+    let jwt = claims::create_token()?;
 
     let new_user = users::ActiveModel {
         username: Set(request_user.username),
-        password: Set(request_user.password),
-        token: Set(Some("ashdbfj34t5498tg0sdfopvml".to_owned())),
+        password: Set(hash_password(request_user.password)?),
+        token: Set(Some(jwt.to_owned())),
         ..Default::default()
     }
         .save(&connection)
@@ -60,8 +62,12 @@ pub async fn login(
         .map_err(|_| StatusCode::INTERNAL_SERVER_ERROR)?;
 
     if let Some(db_user) = db_user {
+        if !verify_password(request_user.password, &db_user.password)? {
+            return Err(StatusCode::UNAUTHORIZED);
+        }
+
         // login logic
-        let new_token = "ajdsng4359038guivsjld345reaa".to_owned(); // will be changed to random string
+        let new_token = claims::create_token()?.to_owned(); // will be changed to random string
         let mut user = db_user.into_active_model();
 
         // replace with a randomized token
@@ -99,4 +105,11 @@ pub async fn logout(
     Ok(())
 }
 
+fn hash_password(password: String) -> Result<String, StatusCode> {
+    bcrypt::hash(password, 14).map_err(|_error| StatusCode::INTERNAL_SERVER_ERROR)
+}
+
+fn verify_password(password: String, hash: &str) -> Result<bool, StatusCode> {
+    bcrypt::verify(password, hash).map_err(|_error| StatusCode::INTERNAL_SERVER_ERROR)
+}
 // https://github.com/tokio-rs/axum/discussions/1735
