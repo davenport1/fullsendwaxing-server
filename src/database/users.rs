@@ -8,7 +8,9 @@ pub struct Model {
     #[sea_orm(primary_key)]
     pub id: i32,
     #[sea_orm(unique)]
-    pub username: String,
+    pub email: String,
+    pub first_name: String,
+    pub last_name: String,
     pub password: String,
     pub deleted_at: Option<DateTimeWithTimeZone>,
     #[sea_orm(column_type = "Text", nullable)]
@@ -19,8 +21,8 @@ pub struct Model {
 pub enum Relation {
     #[sea_orm(has_many = "super::appointments::Entity")]
     Appointments,
-    #[sea_orm(has_many = "super::tasks::Entity")]
-    Tasks,
+    #[sea_orm(has_many = "super::blogs::Entity")]
+    Blogs,
 }
 
 impl Related<super::appointments::Entity> for Entity {
@@ -29,9 +31,9 @@ impl Related<super::appointments::Entity> for Entity {
     }
 }
 
-impl Related<super::tasks::Entity> for Entity {
+impl Related<super::blogs::Entity> for Entity {
     fn to() -> RelationDef {
-        Relation::Tasks.def()
+        Relation::Blogs.def()
     }
 }
 

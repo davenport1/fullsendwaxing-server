@@ -3,5 +3,5 @@
 pub mod prelude;
 
 pub mod appointments;
-pub mod tasks;
+pub mod blogs;
 pub mod users;
