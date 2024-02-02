@@ -10,6 +10,7 @@ use crate::utilities::fsw_error::FswError;
 pub struct Claims {
     exp: usize,
     iat: usize,
+    roles: Vec<String>, // user roles
 }
 
 pub fn create_token() -> Result<String, StatusCode> {
@@ -21,6 +22,7 @@ pub fn create_token() -> Result<String, StatusCode> {
     let claim = Claims {
         exp: now.timestamp() as usize,
         iat,
+        roles: vec!["user".to_string()],
     };
 
     let secret: &'static str = dotenv!("JWT_SECRET");

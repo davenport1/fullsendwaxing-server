@@ -1,13 +1,21 @@
+CREATE TABLE IF NOT EXISTS admins (
+    id          SERIAL PRIMARY KEY,
+    email       VARCHAR(64) NOT NULL UNIQUE,
+    admin_key   VARCHAR(64) NOT NULL
+);
+
 CREATE TABLE IF NOT EXISTS users (
   id          SERIAL PRIMARY KEY,
-  username    VARCHAR(64) NOT NULL UNIQUE,
+  email    VARCHAR(64) NOT NULL UNIQUE,
+  first_name  VARCHAR(64) NOT NULL,
+  last_name   VARCHAR(64) NOT NULL,
   password    VARCHAR(64) NOT NULL,
   deleted_at  TIMESTAMPTZ DEFAULT NULL,
   token       TEXT DEFAULT NULL
 );
 
 CREATE TABLE IF NOT EXISTS appointments (
-  id          SERIAL PRIMARY KEY, 
+  id          SERIAL PRIMARY KEY,
   user_id     INTEGER NOT NULL,
   date        TIMESTAMPTZ NOT NULL,
   category    INTEGER,
@@ -15,29 +23,24 @@ CREATE TABLE IF NOT EXISTS appointments (
   CONSTRAINT fk_users FOREIGN KEY (user_id) REFERENCES users(id)
 );
 
-CREATE TABLE IF NOT EXISTS tasks (
+CREATE TABLE IF NOT EXISTS blogs (
   id            SERIAL PRIMARY KEY,
-  priority      VARCHAR(4) DEFAULT NULL,
   title         VARCHAR(255) NOT NULL,
-  completed_at  TIMESTAMPTZ DEFAULT NULL,
-  description   TEXT DEFAULT NULL,
+  post_date  TIMESTAMPTZ DEFAULT NULL,
+  body   TEXT DEFAULT NULL,
   deleted_at    TIMESTAMPTZ DEFAULT NULL,
-  user_id       INTEGER DEFAULT NULL, 
-  is_default    BOOLEAN DEFAULT FALSE,
+  user_id       INTEGER DEFAULT NULL,
   CONSTRAINT fk_users FOREIGN KEY (user_id) REFERENCES users(id)
 );
 
-INSERT INTO users (username, password) VALUES ('deleteduser', '$2b$12$x3hs5oMgjHdcV1GUEElfsO19JtS6.ixJAX9Cj62GyhpdPAIW25sky');
+INSERT INTO users (email, first_name, last_name, password)
+    VALUES ('user1@yes.com', 'matt', 'davenport', '$2b$12$x3hs5oMgjHdcV1GUEElfsO19JtS6.ixJAX9Cj62GyhpdPAIW25sky');
 
-INSERT INTO tasks (title, deleted_at, user_id) VALUES (
-  'my deleted task',
+INSERT INTO blogs (title, post_date, user_id) VALUES (
+  'my first post',
   NOW(),
-  (select id from users where username = 'deleteduser')
+  (select id from users where email = 'user1@yes.com')
 );
-
-INSERT INTO tasks (priority, title, description, is_default) VALUES 
-  ('A', 'I am a task, you can complete me by checking the box', 'This is my description', true),
-  ('B', 'See my details for by clicking me', 'My description can be changed', true);
 
 INSERT INTO appointments (user_id, date, category, notes) 
 VALUES (

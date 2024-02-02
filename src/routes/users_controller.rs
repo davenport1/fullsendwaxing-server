@@ -11,14 +11,14 @@ use crate::utilities::claims;
 
 #[derive(Deserialize)]
 pub struct RequestUser {
-    username: String,
+    email: String,
     password: String,
 }
 
 #[derive(Serialize)]
 pub struct ResponseUser {
     user_id: i32,
-    username: String,
+    email: String,
     token: String,
 }
 
@@ -30,7 +30,7 @@ pub async fn create_user(
     let jwt = claims::create_token()?;
 
     let new_user = users::ActiveModel {
-        username: Set(request_user.username),
+        email: Set(request_user.email),
         password: Set(hash_password(request_user.password)?),
         token: Set(Some(jwt.to_owned())),
         ..Default::default()
@@ -41,7 +41,7 @@ pub async fn create_user(
 
     Ok(Json(ResponseUser {
         user_id: new_user.id.unwrap(),
-        username: new_user.username.unwrap(),
+        email: new_user.email.unwrap(),
         token: new_user.token.unwrap().unwrap(),
     }))
 }
@@ -56,7 +56,7 @@ pub async fn login(
 ) -> Result<Json<ResponseUser>, StatusCode> {
 
     let db_user = Users::find()
-        .filter(users::Column::Username.eq(request_user.username))
+        .filter(users::Column::Email.eq(request_user.email))
         .one(&connection)
         .await
         .map_err(|_| StatusCode::INTERNAL_SERVER_ERROR)?;
@@ -78,7 +78,7 @@ pub async fn login(
             .map_err(|_| StatusCode::INTERNAL_SERVER_ERROR)?;
 
         Ok(Json(ResponseUser {
-            username: saved_user.username.unwrap(),
+            email: saved_user.email.unwrap(),
             user_id: saved_user.id.unwrap(),
             token: saved_user.token.unwrap().unwrap(),
         }))
