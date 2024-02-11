@@ -13,6 +13,7 @@ pub struct Model {
     pub last_name: String,
     pub password: String,
     pub deleted_at: Option<DateTimeWithTimeZone>,
+    pub role: i32,
     #[sea_orm(column_type = "Text", nullable)]
     pub token: Option<String>,
 }

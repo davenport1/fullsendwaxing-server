@@ -1,16 +1,11 @@
-CREATE TABLE IF NOT EXISTS admins (
-    id          SERIAL PRIMARY KEY,
-    email       VARCHAR(64) NOT NULL UNIQUE,
-    admin_key   VARCHAR(64) NOT NULL
-);
-
 CREATE TABLE IF NOT EXISTS users (
   id          SERIAL PRIMARY KEY,
-  email    VARCHAR(64) NOT NULL UNIQUE,
+  email       VARCHAR(64) NOT NULL UNIQUE,
   first_name  VARCHAR(64) NOT NULL,
   last_name   VARCHAR(64) NOT NULL,
   password    VARCHAR(64) NOT NULL,
   deleted_at  TIMESTAMPTZ DEFAULT NULL,
+  role        INTEGER NOT NULL,
   token       TEXT DEFAULT NULL
 );
 
@@ -33,13 +28,19 @@ CREATE TABLE IF NOT EXISTS blogs (
   CONSTRAINT fk_users FOREIGN KEY (user_id) REFERENCES users(id)
 );
 
-INSERT INTO users (email, first_name, last_name, password)
-    VALUES ('user1@yes.com', 'matt', 'davenport', '$2b$12$x3hs5oMgjHdcV1GUEElfsO19JtS6.ixJAX9Cj62GyhpdPAIW25sky');
+INSERT INTO users (email, first_name, last_name, password, role)
+    VALUES ('admin@admin.com', 'matt', 'davenport', 'password', 1);
+
+INSERT INTO users (email, first_name, last_name, password, role)
+    VALUES ('user@user.com', 'regular', 'user', 'password', 2);
+
+INSERT INTO users (email, first_name, last_name, password, role)
+    VALUES ('user2@user.com', 'regular2', 'user2', 'password', 2);
 
 INSERT INTO blogs (title, post_date, user_id) VALUES (
   'my first post',
   NOW(),
-  (select id from users where email = 'user1@yes.com')
+  (select id from users where email = 'admin@admin.com')
 );
 
 INSERT INTO appointments (user_id, date, category, notes) 

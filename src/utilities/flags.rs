@@ -14,6 +14,12 @@ bitflags! {
         /// The combination of `A`, `B`, and `C`.
         const FULLTUNE = Self::WAX.bits() | Self::EDGE.bits();
     }
+
+    pub struct UserRoleFlags: u32 {
+        const ADMIN = 0b00000001;
+
+        const USER = 0b00000010;
+    }
 }
 
 // example from docs:
